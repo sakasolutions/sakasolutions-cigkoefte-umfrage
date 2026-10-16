@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Çiğ Köfte">
+<meta name="theme-color" content="#C22F3B">
+<meta name="robots" content="noindex">
+<title>Çiğ Köfte Bewertung</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; }
+  [hidden] { display: none !important; }
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,300;6..12,400;6..12,600;6..12,800&display=swap">
+<style>
+/* Kiosk, iPad quer: weiße Karte auf zweigeteiltem Granatapfel-Grund, eine Frage pro Karte, Umriss-Smileys.
+   Bewusst nur ein Look (auch im Dunkelmodus), alle Farben explizit gesetzt. */
+:root {
+  --bg1: #C22F3B;
+  --bg2: #CF4450;
+  --card: #FFFFFF;
+  --ink: #2B2F3A;
+  --q: #555B69;
+  --muted: #9AA0AC;
+  --line: #E6E8EE;
+  --accent: #C22F3B;
+  --stem: #3E9B4F;
+  --f1: #E0574F; --f2: #EE8A3F; --f3: #EDB13A; --f4: #8DC351; --f5: #55B25E;
+  --font: "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+
+html, body { height: 100%; }
+body {
+  background: linear-gradient(90deg, var(--bg1) 50%, var(--bg2) 50%);
+  color: var(--ink); font-family: var(--font);
+  overflow: hidden; touch-action: manipulation;
+  -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.app {
+  height: 100%; box-sizing: border-box; display: flex;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: clamp(16px, 4vh, 40px);
+}
+.card {
+  flex: 1; max-width: 1240px; margin: 0 auto; background: var(--card);
+  border-radius: clamp(24px, 3vw, 40px);
+  box-shadow: 0 30px 60px -20px rgb(60 0 10 / .35);
+  display: grid; grid-template-rows: auto 1fr auto; min-height: 0;
+  padding: clamp(18px, 3.5vh, 36px) clamp(20px, 4vw, 56px);
+}
+
+.card-top { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: clamp(15px, 1.6vw, 18px); color: var(--ink); cursor: default; }
+.brand em { font-style: normal; font-weight: 600; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--stem); }
+.sync { width: 7px; height: 7px; border-radius: 50%; background: var(--f5); opacity: .6; }
+.sync.pending { background: var(--f3); opacity: 1; }
+.dots { display: flex; gap: 18px; }
+.dots i { width: 11px; height: 11px; border-radius: 50%; background: var(--line); transition: background .25s; }
+.dots i.on { background: var(--accent); }
+
+.stage { display: grid; place-items: center; min-height: 0; }
+.screen { width: 100%; display: flex; flex-direction: column; align-items: center; gap: clamp(28px, 6vh, 64px); text-align: center; }
+.screen.enter { animation: enter .4s ease-out; }
+@keyframes enter { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: none; } }
+
+h1 {
+  font-weight: 300; color: var(--q); margin: 0;
+  font-size: clamp(28px, 4.4vw, 54px); line-height: 1.22; letter-spacing: -0.01em;
+  text-wrap: balance; max-width: 20ch;
+}
+
+.row { display: flex; justify-content: center; gap: clamp(14px, 3.4vw, 46px); width: 100%; }
+.opt {
+  appearance: none; border: 0; background: none; color: inherit; font: inherit; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 4px;
+  transition: transform .15s ease-out, opacity .2s;
+}
+.opt:active { transform: scale(.93); }
+.opt:focus-visible { outline: 3px solid var(--accent); outline-offset: 6px; border-radius: 50%; }
+.opt.picked { transform: scale(1.1); }
+.row.has-pick .opt:not(.picked) { opacity: .3; }
+.opt .lbl { font-weight: 600; font-size: clamp(14px, 1.6vw, 18px); color: var(--muted); }
+.opt.picked .lbl { color: var(--ink); }
+
+.icon { width: clamp(64px, 11vw, 132px); height: auto; display: block; }
+.big .icon { width: clamp(84px, 14vw, 160px); }
+.big .lbl { font-size: clamp(17px, 2vw, 22px); color: var(--q); }
+
+.thanks h1 { font-size: clamp(44px, 7vw, 84px); color: var(--ink); font-weight: 300; }
+.thanks .sub { font-size: clamp(20px, 2.6vw, 30px); color: var(--accent); font-weight: 600; margin: calc(-1 * clamp(14px, 3vh, 40px)) 0 0; }
+.ring { width: 54px; height: 54px; }
+.ring circle { fill: none; stroke-width: 5; }
+.ring .bg { stroke: var(--line); }
+.ring .fg { stroke: var(--accent); stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; stroke-dasharray: 151; stroke-dashoffset: 0; }
+.ring.run .fg { transition: stroke-dashoffset linear; stroke-dashoffset: 151; }
+
+.card-foot { display: flex; justify-content: space-between; align-items: center; min-height: 40px; }
+.nav {
+  appearance: none; border: 0; background: none; font: inherit; cursor: pointer;
+  font-weight: 800; font-size: clamp(14px, 1.5vw, 17px); letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); padding: 10px 4px;
+}
+.nav:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 6px; }
+.foot-note { color: var(--muted); font-size: 14px; }
+
+/* Auswertung (lange auf „Çiğ Köfte“ drücken) */
+.stats {
+  position: fixed; inset: 0; background: #F3F4F7; z-index: 5; overflow: auto;
+  padding: calc(24px + env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) calc(24px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  -webkit-user-select: text; user-select: text;
+}
+.stats-in { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.stats-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.stats h2 { font-weight: 800; font-size: 30px; margin: 0; color: var(--ink); }
+.close { appearance: none; border: 2px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-weight: 700; border-radius: 99px; padding: 10px 18px; cursor: pointer; }
+.kpis { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.kpi { background: var(--card); border-radius: 18px; padding: 16px; }
+.kpi b { display: block; font-weight: 800; font-size: 34px; font-variant-numeric: tabular-nums; color: var(--ink); }
+.kpi small { color: var(--muted); font-size: 13px; }
+.block { background: var(--card); border-radius: 18px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.block h3 { margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.bar { display: grid; grid-template-columns: 110px 1fr 70px; align-items: center; gap: 10px; font-size: 15px; color: var(--ink); }
+.bar .track { height: 12px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.bar .fill { display: block; height: 100%; border-radius: 99px; background: var(--accent); }
+.bar .n { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+.note { color: var(--muted); font-size: 14px; margin: 0; }
+@media (max-width: 520px) { .kpis { grid-template-columns: 1fr 1fr; } .bar { grid-template-columns: 84px 1fr 62px; } .row { gap: 8px; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .screen.enter { animation: none; }
+  .opt, .dots i { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="card">
+    <header class="card-top">
+      <div class="brand" id="brand">Çiğ Köfte <em>vegan</em> <span class="sync" id="sync"></span></div>
+      <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div></div>
+    </header>
+
+    <main class="stage" id="stage">
+      <section class="screen" data-step="taste">
+        <h1>Wie hat dir unsere Çiğ Köfte geschmeckt?</h1>
+        <div class="row" id="row-taste"></div>
+      </section>
+
+      <section class="screen" data-step="spice" hidden>
+        <h1>Wie fandest du die Schärfe?</h1>
+        <div class="row" id="row-spice"></div>
+      </section>
+
+      <section class="screen" data-step="order" hidden>
+        <h1>Würdest du sie bestellen, wenn es sie in Giengen gäbe?</h1>
+        <div class="row" id="row-order"></div>
+      </section>
+
+      <section class="screen thanks" data-step="done" hidden>
+        <h1>Danke dir!</h1>
+        <p class="sub">Afiyet olsun.</p>
+        <svg class="ring" id="ring" viewBox="0 0 54 54" aria-hidden="true"><circle class="bg" cx="27" cy="27" r="24"/><circle class="fg" cx="27" cy="27" r="24"/></svg>
+      </section>
+    </main>
+
+    <footer class="card-foot">
+      <button class="nav" id="back" hidden>Zurück</button>
+      <span class="foot-note" id="footnote">Einfach antippen</span>
+    </footer>
+  </div>
+</div>
+
+<div class="stats" id="stats" hidden>
+  <div class="stats-in">
+    <div class="stats-head"><h2>Auswertung</h2><button class="close" id="close">Zurück zur Umfrage</button></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="block"><h3>Geschmack</h3><div id="b-taste"></div></div>
+    <div class="block"><h3>Schärfe</h3><div id="b-spice"></div></div>
+    <div class="block"><h3>Würde bestellen</h3><div id="b-order"></div></div>
+    <p class="note" id="snote"></p>
+  </div>
+</div>
+
+<script>
+(function () {
+  // Web-App-URL aus Google Apps Script (siehe README). Leer = Antworten bleiben nur auf dem Gerät.
+  var SCRIPT_URL = "";
+
+  var STEPS = ["taste", "spice", "order", "done"];
+  var THANKS_MS = 7000;   // Danke-Bildschirm, danach von vorn
+  var IDLE_MS = 25000;    // mittendrin weggegangen: Teilantwort speichern, von vorn
+  var LS_PENDING = "ck_pending", LS_ALL = "ck_all";
+
+  // ---------- Symbole ----------
+  var MOUTH = {
+    sad:  '<path d="M33 72 C37 57 63 57 67 72 Z" fill="C" stroke="C" stroke-width="3" stroke-linejoin="round"/>',
+    down: '<path d="M35 70 Q50 60 65 70" fill="none" stroke="C" stroke-width="6" stroke-linecap="round"/>',
+    flat: '<path d="M36 66 H64" fill="none" stroke="C" stroke-width="6" stroke-linecap="round"/>',
+    up:   '<path d="M35 61 Q50 74 65 61" fill="none" stroke="C" stroke-width="6" stroke-linecap="round"/>',
+    grin: '<path d="M32 58 C34 79 66 79 68 58 Z" fill="C" stroke="C" stroke-width="3" stroke-linejoin="round"/>'
+  };
+  function ring(c, inner) {
+    var tint = "color-mix(in srgb, var(" + c + ") 22%, white)";
+    return '<svg class="icon" viewBox="0 0 100 100" aria-hidden="true">' +
+      '<circle cx="50" cy="50" r="44" fill="' + tint + '" stroke="var(' + c + ')" stroke-width="6"/>' + inner + '</svg>';
+  }
+  function face(c, mood) {
+    var col = "var(" + c + ")";
+    return ring(c, '<circle cx="37" cy="42" r="5.5" fill="' + col + '"/><circle cx="63" cy="42" r="5.5" fill="' + col + '"/>' +
+      MOUTH[mood].replace(/C"/g, col + '"').replace(/"C /g, '"' + col + ' '));
+  }
+  var CHILI = '<path d="M8.2 8.6c1.2-1.6 3.4-1.2 4 .8 1.3 4.4 3.6 8.3 8.3 10.6-4.6 2.6-12.4.4-13.6-6.6-.3-1.9.2-3.6 1.3-4.8z" fill="#D3302B"/>' +
+              '<path d="M9.6 8.2c-.2-2 .8-3.8 2.8-4.6" fill="none" stroke="var(--stem)" stroke-width="1.8" stroke-linecap="round"/>';
+  function chilis(c, n) {
+    var s = 15, w = 24 + (n - 1) * s, x0 = 50 - (w * 1.5) / 2, g = "";
+    for (var i = 0; i < n; i++) g += '<g transform="translate(' + (x0 + i * s * 1.5) + ' 32) scale(1.5)">' + CHILI + '</g>';
+    return ring(c, g);
+  }
+
+  var OPTIONS = {
+    taste: [
+      { v: 1, l: "Gar nicht", svg: face("--f1", "sad") },
+      { v: 2, l: "Geht so",   svg: face("--f2", "down") },
+      { v: 3, l: "Okay",      svg: face("--f3", "flat") },
+      { v: 4, l: "Lecker",    svg: face("--f4", "up") },
+      { v: 5, l: "Hammer",    svg: face("--f5", "grin") }
+    ],
+    spice: [
+      { v: "zu mild",       l: "Zu mild",       svg: chilis("--f3", 1) },
+      { v: "genau richtig", l: "Genau richtig", svg: chilis("--f5", 2) },
+      { v: "zu scharf",     l: "Zu scharf",     svg: chilis("--f1", 3) }
+    ],
+    order: [
+      { v: "ja",         l: "Ja",         svg: face("--f5", "grin") },
+      { v: "vielleicht", l: "Vielleicht", svg: face("--f3", "flat") },
+      { v: "nein",       l: "Nein",       svg: face("--f1", "sad") }
+    ]
+  };
+  Object.keys(OPTIONS).forEach(function (k) {
+    var row = document.getElementById("row-" + k);
+    OPTIONS[k].forEach(function (o, i) {
+      var b = document.createElement("button");
+      b.className = "opt" + (k === "taste" ? "" : " big");
+      b.id = k + "-" + i;
+      b.dataset.v = o.v;
+      b.setAttribute("aria-label", o.l);
+      b.innerHTML = o.svg + '<span class="lbl">' + o.l + '</span>';
+      row.appendChild(b);
+    });
+  });
+
+  // ---------- Ablauf ----------
+  var stepIdx = 0, answers = {}, locked = false, idleT = null, doneT = null;
+  var remote = {}, wakeLock = null;
+  var screens = {};
+  document.querySelectorAll(".screen").forEach(function (s) { screens[s.dataset.step] = s; });
+  var dots = document.querySelectorAll(".dots i");
+  var back = document.getElementById("back");
+  var footnote = document.getElementById("footnote");
+
+  function show(i) {
+    stepIdx = i;
+    STEPS.forEach(function (k, j) {
+      var s = screens[k];
+      s.hidden = j !== i;
+      s.classList.remove("enter");
+      s.querySelectorAll(".picked").forEach(function (p) { p.classList.remove("picked"); });
+      s.querySelectorAll(".has-pick").forEach(function (p) { p.classList.remove("has-pick"); });
+    });
+    void screens[STEPS[i]].offsetWidth;
+    screens[STEPS[i]].classList.add("enter");
+    dots.forEach(function (d, j) { d.classList.toggle("on", j === i); });
+    back.hidden = !(i === 1 || i === 2);
+    footnote.textContent = i === 0 ? "Einfach antippen" : i === 3 ? "" : "Frage " + (i + 1) + " von 3";
+  }
+
+  function restart() {
+    clearTimeout(idleT); clearTimeout(doneT);
+    answers = {}; locked = false;
+    show(0);
+  }
+
+  function armIdle() {
+    clearTimeout(idleT);
+    idleT = setTimeout(function () {
+      if (stepIdx > 0 && stepIdx < 3) save(false);
+      restart();
+    }, IDLE_MS);
+  }
+
+  document.getElementById("stage").addEventListener("click", function (e) {
+    if (stepIdx === 3) { restart(); return; }       // Danke-Bildschirm: Tippen startet sofort neu
+    var btn = e.target.closest(".opt");
+    if (!btn || locked) return;
+    keepAwake();
+    locked = true;
+    var key = STEPS[stepIdx];
+    answers[key] = key === "taste" ? +btn.dataset.v : btn.dataset.v;
+    btn.classList.add("picked");
+    btn.parentNode.classList.add("has-pick");
+    setTimeout(function () {
+      locked = false;
+      if (stepIdx === 2) { save(true); thanks(); }
+      else { show(stepIdx + 1); armIdle(); }
+    }, 320);
+  });
+
+  back.addEventListener("click", function () {
+    if (locked || stepIdx < 1 || stepIdx > 2) return;
+    delete answers[STEPS[stepIdx - 1]];
+    show(stepIdx - 1);
+    if (stepIdx === 0) clearTimeout(idleT); else armIdle();
+  });
+
+  function thanks() {
+    clearTimeout(idleT);
+    show(3);
+    var r = document.getElementById("ring");
+    r.classList.remove("run");
+    r.querySelector(".fg").style.transitionDuration = THANKS_MS + "ms";
+    void r.offsetWidth;
+    r.classList.add("run");
+    doneT = setTimeout(restart, THANKS_MS);
+  }
+
+  // ---------- Speichern: erst lokal, dann in die Datenbank ----------
+  function lsGet(k) { try { return JSON.parse(localStorage.getItem(k) || "[]"); } catch (e) { return []; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  var memPending = lsGet(LS_PENDING), memAll = lsGet(LS_ALL);
+
+  function save(complete) {
+    var rec = {
+      id: "r-" + Date.now() + "-" + Math.random().toString(36).slice(2, 7),
+      taste: answers.taste || null,
+      spice: answers.spice || null,
+      order: answers.order || null,
+      complete: !!complete,
+      ts: new Date().toISOString()
+    };
+    memPending.push(rec); memAll.push(rec);
+    lsSet(LS_PENDING, memPending); lsSet(LS_ALL, memAll);
+    updateSync();
+    flush();
+  }
+
+  // text/plain hält den Request „einfach“ (kein CORS-Preflight), Apps Script antwortet mit JSON.
+  // Das Script ignoriert doppelte ids, ein erneuter Versuch nach einem Funkloch schadet also nicht.
+  var flushing = false;
+  function flush() {
+    if (!SCRIPT_URL || flushing || !memPending.length) return;
+    flushing = true;
+    var rec = memPending[0];
+    fetch(SCRIPT_URL, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(rec) })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res || !res.ok) throw new Error("not ok");
+        memPending = memPending.filter(function (r) { return r.id !== rec.id; });
+        lsSet(LS_PENDING, memPending);
+        flushing = false; updateSync();
+        if (memPending.length) flush();
+      })
+      .catch(function () { flushing = false; updateSync(); });   // später erneut, siehe Intervall
+  }
+  setInterval(flush, 15000);
+  window.addEventListener("online", flush);
+
+  function updateSync() {
+    document.getElementById("sync").classList.toggle("pending", memPending.length > 0 || !SCRIPT_URL);
+    if (!document.getElementById("stats").hidden) renderStats();
+  }
+
+  function loadRemote() {
+    if (!SCRIPT_URL) return;
+    fetch(SCRIPT_URL).then(function (r) { return r.json(); }).then(function (res) {
+      if (!res || !res.rows) return;
+      remote = {};
+      res.rows.forEach(function (x) { if (x.id) remote[x.id] = x; });
+      if (!statsEl.hidden) renderStats();
+    }).catch(function () {});
+  }
+
+  // ---------- Bildschirm wach halten ----------
+  function keepAwake() {
+    if (wakeLock || !navigator.wakeLock) return;
+    navigator.wakeLock.request("screen").then(function (l) {
+      wakeLock = l; l.addEventListener("release", function () { wakeLock = null; });
+    }, function () {});
+  }
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) { wakeLock = null; keepAwake(); } });
+
+  // ---------- Auswertung ----------
+  var statsEl = document.getElementById("stats");
+  var pressT = null;
+  var brand = document.getElementById("brand");
+  brand.addEventListener("pointerdown", function () { pressT = setTimeout(openStats, 1500); });
+  ["pointerup", "pointerleave", "pointercancel"].forEach(function (ev) { brand.addEventListener(ev, function () { clearTimeout(pressT); }); });
+  document.getElementById("close").addEventListener("click", function () { statsEl.hidden = true; restart(); });
+
+  function openStats() { clearTimeout(idleT); renderStats(); statsEl.hidden = false; loadRemote(); }
+
+  function allRecords() {
+    var map = {};
+    memAll.forEach(function (r) { map[r.id] = r; });
+    Object.keys(remote).forEach(function (id) { map[id] = remote[id]; });
+    return Object.keys(map).map(function (k) { return map[k]; });
+  }
+
+  function bars(el, rows, total) {
+    el.innerHTML = rows.map(function (r) {
+      var pct = total ? Math.round(r.n / total * 100) : 0;
+      return '<div class="bar"><span>' + r.l + '</span><span class="track"><span class="fill" style="width:' + pct + '%"></span></span><span class="n">' + r.n + ' · ' + pct + '%</span></div>';
+    }).join("");
+  }
+
+  function renderStats() {
+    var all = allRecords();
+    function count(field, val) { return all.filter(function (r) { return r[field] === val; }).length; }
+    var tasted = all.filter(function (r) { return r.taste; });
+    var avg = tasted.length ? tasted.reduce(function (s, r) { return s + r.taste; }, 0) / tasted.length : 0;
+    var ordered = all.filter(function (r) { return r.order; });
+    var ja = count("order", "ja");
+    document.getElementById("kpis").innerHTML =
+      '<div class="kpi"><b>' + all.length + '</b><small>Antworten</small></div>' +
+      '<div class="kpi"><b>' + (tasted.length ? avg.toFixed(1).replace(".", ",") : "–") + '</b><small>Ø Geschmack von 5</small></div>' +
+      '<div class="kpi"><b>' + (ordered.length ? Math.round(ja / ordered.length * 100) + "%" : "–") + '</b><small>würden bestellen</small></div>';
+    bars(document.getElementById("b-taste"), OPTIONS.taste.slice().reverse().map(function (o) { return { l: o.l, n: count("taste", o.v) }; }), tasted.length);
+    bars(document.getElementById("b-spice"), OPTIONS.spice.map(function (o) { return { l: o.l, n: count("spice", o.v) }; }), all.filter(function (r) { return r.spice; }).length);
+    bars(document.getElementById("b-order"), OPTIONS.order.map(function (o) { return { l: o.l, n: count("order", o.v) }; }), ordered.length);
+    var partial = all.filter(function (r) { return !r.complete; }).length;
+    var parts = [];
+    if (partial) parts.push(partial + " davon unvollständig (mittendrin abgebrochen)");
+    parts.push(!SCRIPT_URL ? "Kein Google Sheet verbunden: Antworten liegen nur auf diesem Gerät."
+      : memPending.length ? memPending.length + " Antworten warten noch auf Internet und werden automatisch nachgeschickt."
+      : "Alles übertragen.");
+    document.getElementById("snote").textContent = parts.join(" · ");
+  }
+
+  // ---------- Start ----------
+  show(0);
+  updateSync();
+  flush();
+})();
+</script>
+</body>
+</html>
