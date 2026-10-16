@@ -78,6 +78,8 @@ function einrichten() {
   if (a) a.clear(); else a = ss.insertSheet('Auswertung');
   a.setConditionalFormatRules([]);
   const B = 'Bewertungen!';
+  // Deutsche (und die meisten anderen) Sheets trennen Formel-Argumente mit „;“, englische mit „,“.
+  const S = /^en/.test(ss.getSpreadsheetLocale()) ? ',' : ';';
 
   a.getRange('A1').setValue('Çiğ Köfte · Auswertung').setFontSize(16).setFontWeight('bold');
   a.getRange('A3:B5').setValues([
@@ -86,8 +88,8 @@ function einrichten() {
     ['Würden bestellen (Ja)', '']
   ]);
   a.getRange('B3').setFormula('=COUNTA(' + B + 'A2:A)');
-  a.getRange('B4').setFormula('=IFERROR(ROUND(AVERAGE(' + B + 'C2:C),1),"–")');
-  a.getRange('B5').setFormula('=IFERROR(COUNTIF(' + B + 'E2:E,"ja")/COUNTA(' + B + 'E2:E),"–")').setNumberFormat('0%');
+  a.getRange('B4').setFormula('=IFERROR(ROUND(AVERAGE(' + B + 'C2:C)' + S + '1)' + S + '"–")');
+  a.getRange('B5').setFormula('=IFERROR(COUNTIF(' + B + 'E2:E' + S + '"ja")/COUNTA(' + B + 'E2:E)' + S + '"–")').setNumberFormat('0%');
   a.getRange('A3:A5').setFontWeight('bold');
   a.getRange('B3:B5').setFontSize(14).setFontWeight('bold').setHorizontalAlignment('left');
 
@@ -98,9 +100,10 @@ function einrichten() {
       const r = first + i;
       const crit = typeof it[1] === 'number' ? it[1] : '"' + it[1] + '"';
       a.getRange(r, 1).setValue(it[0]).setBackground(it[2]);
-      a.getRange(r, 2).setFormula('=COUNTIF(' + B + col + '2:' + col + ',' + crit + ')');
-      a.getRange(r, 3).setFormula('=IFERROR(B' + r + '/SUM(B$' + first + ':B$' + last + '),0)').setNumberFormat('0%');
-      a.getRange(r, 4).setFormula('=SPARKLINE(C' + r + ',{"charttype","bar";"max",1;"color1","' + it[3] + '"})');
+      a.getRange(r, 2).setFormula('=COUNTIF(' + B + col + '2:' + col + S + crit + ')');
+      a.getRange(r, 3).setFormula('=IFERROR(B' + r + '/SUM(B$' + first + ':B$' + last + ')' + S + '0)').setNumberFormat('0%');
+      // Balken aus Blockzeichen: 20 Zeichen = 100 %
+      a.getRange(r, 4).setFormula('=REPT("█"' + S + 'ROUND(C' + r + '*20' + S + '0))').setFontColor(it[3]);
     });
   }
   block(7, 'Geschmack', 'C', [
