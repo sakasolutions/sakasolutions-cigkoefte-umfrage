@@ -301,7 +301,7 @@ h1 {
   document.getElementById("stage").addEventListener("click", function (e) {
     if (stepIdx === 3) { restart(); return; }       // Danke-Bildschirm: Tippen startet sofort neu
     var btn = e.target.closest(".opt");
-    if (!btn || locked) return;
+    if (!btn || locked || btn.closest(".screen") !== screens[STEPS[stepIdx]]) return;
     keepAwake();
     locked = true;
     var key = STEPS[stepIdx];
